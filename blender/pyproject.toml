@@ -1,0 +1,70 @@
+[project]
+name = "blender-mcp-workspace"
+version = "1.0.0"
+description = "Workspace root for blender-mcp (MCP server + protocol + Blender add-on)"
+requires-python = ">=3.11"
+readme = "README.md"
+license = { text = "MIT" }
+authors = [{ name = "Antony Guedes" }]
+
+[project.urls]
+Homepage = "https://github.com/antonyguedes/mcp-servers"
+Repository = "https://github.com/antonyguedes/mcp-servers"
+Issues = "https://github.com/antonyguedes/mcp-servers/issues"
+
+[tool.uv.workspace]
+members = [
+    "packages/protocol",
+    "packages/server",
+]
+
+[tool.uv.sources]
+blender-mcp-protocol = { workspace = true }
+blender-mcp = { workspace = true }
+
+[dependency-groups]
+dev = [
+    "blender-mcp",
+    "blender-mcp-protocol",
+    "pytest>=8.3.0",
+    "pytest-asyncio>=0.25.0",
+    "ruff>=0.9.0",
+    "pyright>=1.1.390",
+]
+
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+src = [
+    "packages/protocol",
+    "packages/server",
+    "packages/addon",
+    "tests",
+]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM", "RUF"]
+ignore = ["E501"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["blender_mcp", "blender_mcp_protocol", "blender_mcp_addon", "tests"]
+
+[tool.ruff.lint.per-file-ignores]
+# Add-on and protocol must stay Python 3.10+ compatible (Blender 3.6 LTS)
+"packages/addon/**/*.py" = ["UP007", "UP017", "UP035", "UP041", "UP042", "SIM105"]
+"packages/protocol/**/*.py" = ["UP007", "UP017", "UP035", "UP042"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
+pythonpath = ["."]
+testpaths = ["tests"]
+markers = [
+    "integration: tests that launch a real headless Blender process",
+]
+
+[tool.pyright]
+pythonVersion = "3.11"
+include = ["packages/protocol", "packages/server"]
+exclude = ["packages/addon", "**/__pycache__"]
+typeCheckingMode = "standard"

@@ -1,0 +1,24 @@
+services:
+  blender-mcp:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    ports:
+      - "127.0.0.1:8765:8765"
+    environment:
+      BLENDER_MCP_ALLOW_PYTHON: "false"
+      BLENDER_MCP_PROFILE: "full"
+      BLENDER_MCP_HTTP_BEARER_TOKEN: "${BLENDER_MCP_HTTP_BEARER_TOKEN:-}"
+      SKETCHFAB_API_KEY: "${SKETCHFAB_API_KEY:-}"
+      HYPER3D_API_KEY: "${HYPER3D_API_KEY:-}"
+      HUNYUAN3D_API_KEY: "${HUNYUAN3D_API_KEY:-}"
+      HUNYUAN3D_BASE_URL: "${HUNYUAN3D_BASE_URL:-}"
+      TRIPO_API_KEY: "${TRIPO_API_KEY:-}"
+      MESHY_API_KEY: "${MESHY_API_KEY:-}"
+      TRELLIS_BASE_URL: "${TRELLIS_BASE_URL:-}"
+    volumes:
+      - ./workspace:/workspace
+      - blender-mcp-cache:/cache
+
+volumes:
+  blender-mcp-cache:

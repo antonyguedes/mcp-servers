@@ -1,0 +1,45 @@
+# Environment & secrets
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+*.egg-info/
+.coverage
+coverage.*
+htmlcov/
+
+# Node / TypeScript
+node_modules/
+*.tsbuildinfo
+
+# Build & distribution artifacts
+dist/
+build/
+target/
+
+# Logs & temporary runtime data
+*.log
+*.jsonl
+*.tmp
+docker/workspace/
+
+# Software-specific backups
+*.blend1
+*.blend2
+
+# Editors & OS
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*~

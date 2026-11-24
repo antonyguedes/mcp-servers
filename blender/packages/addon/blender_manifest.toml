@@ -1,0 +1,20 @@
+schema_version = "1.0.0"
+
+id = "blender_mcp_bridge"
+version = "1.0.0"
+name = "Blender MCP Bridge"
+tagline = "Local JSON-RPC bridge connecting AI agents via MCP to Blender"
+maintainer = "Antony Guedes"
+type = "add-on"
+
+blender_version_min = "4.2.0"
+
+license = [
+  "SPDX:GPL-3.0-or-later",
+]
+
+tags = ["System", "Development"]
+
+[permissions]
+network = "Localhost TCP bridge (127.0.0.1) for the MCP server"
+files = "Session metadata, temp renders, checkpoints, and scene I/O"

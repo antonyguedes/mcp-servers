@@ -1,0 +1,20 @@
+[build-system]
+requires = ["hatchling>=1.25.0"]
+build-backend = "hatchling.build"
+
+[project]
+name = "blender-mcp-protocol"
+version = "1.0.0"
+description = "Shared JSON-RPC 2.0 wire protocol and schema types for blender-mcp (stdlib-only)"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "Antony Guedes" }]
+dependencies = []
+
+[project.urls]
+Homepage = "https://github.com/antonyguedes/mcp-servers"
+Repository = "https://github.com/antonyguedes/mcp-servers"
+Issues = "https://github.com/antonyguedes/mcp-servers/issues"
+
+[tool.hatch.build.targets.wheel]
+packages = ["blender_mcp_protocol"]
