@@ -26,6 +26,27 @@ def _infer_format(filepath: Path, explicit: str | None) -> str:
     )
 
 
+def _has_operator(category: str, name: str) -> bool:
+    """Return True only when `bpy.ops.<category>.<name>` is registered.
+
+    `hasattr(bpy.ops.wm, "foo")` always returns True in Blender because
+    `_BPyOpsSubMod.__getattr__` creates operator proxies lazily; `dir()`
+    queries Blender's live operator registry accurately across 3.6 -> 5.3+.
+    """
+    if category not in dir(bpy.ops):
+        return False
+    return name in dir(getattr(bpy.ops, category))
+
+
+def _ensure_addon(module_name: str) -> None:
+    try:
+        import addon_utils  # type: ignore[import-not-found]
+
+        addon_utils.enable(module_name, default_set=False, persistent=False)
+    except Exception:
+        pass
+
+
 def export_file(params: dict[str, Any], _ctx: ExecutionContext) -> dict[str, Any]:
     raw_path = str(params.get("filepath", "")).strip()
     if not raw_path:
@@ -36,6 +57,8 @@ def export_file(params: dict[str, Any], _ctx: ExecutionContext) -> dict[str, Any
     selected_only = bool(params.get("selected_only", False))
 
     if fmt in ("glb", "gltf"):
+        if not _has_operator("export_scene", "gltf"):
+            _ensure_addon("io_scene_gltf2")
         export_fmt = "GLB" if fmt == "glb" else "GLTF_SEPARATE"
         bpy.ops.export_scene.gltf(
             filepath=str(path),
@@ -43,21 +66,29 @@ def export_file(params: dict[str, Any], _ctx: ExecutionContext) -> dict[str, Any
             use_selection=selected_only,
         )
     elif fmt == "fbx":
+        if not _has_operator("export_scene", "fbx"):
+            _ensure_addon("io_scene_fbx")
         bpy.ops.export_scene.fbx(filepath=str(path), use_selection=selected_only)
     elif fmt == "obj":
-        if hasattr(bpy.ops.wm, "obj_export"):
+        if _has_operator("wm", "obj_export"):
             bpy.ops.wm.obj_export(filepath=str(path), export_selected_objects=selected_only)
         else:
+            if not _has_operator("export_scene", "obj"):
+                _ensure_addon("io_scene_obj")
             bpy.ops.export_scene.obj(filepath=str(path), use_selection=selected_only)
     elif fmt == "stl":
-        if hasattr(bpy.ops.wm, "stl_export"):
+        if _has_operator("wm", "stl_export"):
             bpy.ops.wm.stl_export(filepath=str(path), export_selected_objects=selected_only)
         else:
+            if not _has_operator("export_mesh", "stl"):
+                _ensure_addon("io_mesh_stl")
             bpy.ops.export_mesh.stl(filepath=str(path), use_selection=selected_only)
     elif fmt == "ply":
-        if hasattr(bpy.ops.wm, "ply_export"):
+        if _has_operator("wm", "ply_export"):
             bpy.ops.wm.ply_export(filepath=str(path), export_selected_objects=selected_only)
         else:
+            if not _has_operator("export_mesh", "ply"):
+                _ensure_addon("io_mesh_ply")
             bpy.ops.export_mesh.ply(filepath=str(path), use_selection=selected_only)
     elif fmt in ("usd", "usda", "usdc"):
         bpy.ops.wm.usd_export(filepath=str(path), selected_objects_only=selected_only)
@@ -90,26 +121,36 @@ def import_file(params: dict[str, Any], _ctx: ExecutionContext) -> dict[str, Any
     before_ptrs = {o.as_pointer() for o in bpy.data.objects}
 
     if fmt in ("glb", "gltf"):
+        if not _has_operator("import_scene", "gltf"):
+            _ensure_addon("io_scene_gltf2")
         bpy.ops.import_scene.gltf(filepath=str(path))
     elif fmt == "fbx":
-        if hasattr(bpy.ops.wm, "fbx_import"):
+        if _has_operator("wm", "fbx_import"):
             bpy.ops.wm.fbx_import(filepath=str(path))
         else:
+            if not _has_operator("import_scene", "fbx"):
+                _ensure_addon("io_scene_fbx")
             bpy.ops.import_scene.fbx(filepath=str(path))
     elif fmt == "obj":
-        if hasattr(bpy.ops.wm, "obj_import"):
+        if _has_operator("wm", "obj_import"):
             bpy.ops.wm.obj_import(filepath=str(path))
         else:
+            if not _has_operator("import_scene", "obj"):
+                _ensure_addon("io_scene_obj")
             bpy.ops.import_scene.obj(filepath=str(path))
     elif fmt == "stl":
-        if hasattr(bpy.ops.wm, "stl_import"):
+        if _has_operator("wm", "stl_import"):
             bpy.ops.wm.stl_import(filepath=str(path))
         else:
+            if not _has_operator("import_mesh", "stl"):
+                _ensure_addon("io_mesh_stl")
             bpy.ops.import_mesh.stl(filepath=str(path))
     elif fmt == "ply":
-        if hasattr(bpy.ops.wm, "ply_import"):
+        if _has_operator("wm", "ply_import"):
             bpy.ops.wm.ply_import(filepath=str(path))
         else:
+            if not _has_operator("import_mesh", "ply"):
+                _ensure_addon("io_mesh_ply")
             bpy.ops.import_mesh.ply(filepath=str(path))
     elif fmt in ("usd", "usda", "usdc"):
         bpy.ops.wm.usd_import(filepath=str(path))

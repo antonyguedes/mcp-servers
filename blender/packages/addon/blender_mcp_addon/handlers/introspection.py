@@ -172,10 +172,12 @@ def call_operator(params: dict[str, Any], _ctx: ExecutionContext) -> dict[str, A
             f"Operator {op_id!r} is restricted for safety.",
         )
 
-    sub = getattr(bpy.ops, cat, None)
-    op_fn = getattr(sub, name, None) if sub is not None else None
-    if op_fn is None:
+    if cat not in dir(bpy.ops):
         raise AddonError(BridgeErrorCode.NOT_FOUND, f"Operator bpy.ops.{op_id} not found.")
+    sub = getattr(bpy.ops, cat)
+    if name not in dir(sub):
+        raise AddonError(BridgeErrorCode.NOT_FOUND, f"Operator bpy.ops.{op_id} not found.")
+    op_fn = getattr(sub, name)
 
     kwargs = params.get("props") or {}
     override_kwargs: dict[str, Any] = {}
