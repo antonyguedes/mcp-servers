@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="./docs/assets/hero-banner.svg" alt="mcp-servers — Production-grade MCP servers connecting AI agents to desktop and creative software" width="100%" />
+<img src="./public/assets/hero-banner.svg" alt="mcp-servers — Production-grade MCP servers connecting AI agents to desktop and creative software" width="100%" />
 
 <br />
 
@@ -25,7 +25,7 @@
 
 </div>
 
-<img src="./docs/assets/accent-line.svg" alt="" width="100%" />
+<img src="./public/assets/accent-line.svg" alt="" width="100%" />
 
 ## ✨ Overview
 
@@ -37,7 +37,7 @@
 | 🎯 **Semantic Over Raw Scripting** | High-level typed tools, structured diffs, resources, and visual feedback loops instead of brittle ad-hoc code injection. |
 | 🔒 **Secure by Default** | Localhost-only bridges, session authentication, directory allowlists, audit trails, and explicit opt-in gates for risky actions. |
 
-<img src="./docs/assets/accent-line.svg" alt="" width="100%" />
+<img src="./public/assets/accent-line.svg" alt="" width="100%" />
 
 ## 🔌 Available Servers
 
@@ -50,7 +50,7 @@ Each server maintains its own `README.md`, installation steps, client configurat
 > [!NOTE]
 > More MCP servers for additional desktop, creative, and engineering applications are planned and will be added as standalone directories in this repository.
 
-<img src="./docs/assets/accent-line.svg" alt="" width="100%" />
+<img src="./public/assets/accent-line.svg" alt="" width="100%" />
 
 ## 🧠 Architecture
 
@@ -74,7 +74,7 @@ flowchart LR
     style APP fill:#131f3a,stroke:#fb923c,stroke-width:2px,color:#f4f7ff
 ```
 
-<img src="./docs/assets/accent-line.svg" alt="" width="100%" />
+<img src="./public/assets/accent-line.svg" alt="" width="100%" />
 
 ## 🚀 Quick Start
 
@@ -89,14 +89,14 @@ Then follow the setup guide inside the target server's directory:
 
 - **Blender 3D:** see [`blender/README.md`](./blender/README.md) and [`blender/docs/CLIENTS.md`](./blender/docs/CLIENTS.md)
 
-<img src="./docs/assets/accent-line.svg" alt="" width="100%" />
+<img src="./public/assets/accent-line.svg" alt="" width="100%" />
 
 ## 📁 Repository Structure
 
 ```text
 mcp-servers/
 ├── .github/workflows/       # Per-server GitHub Actions CI workflows
-├── docs/assets/             # Shared visual assets (banner & dividers)
+├── public/assets/           # Shared visual assets (banner & dividers)
 ├── blender/                 # blender-mcp v1.0 (MCP server + protocol + Blender add-on)
 │   ├── README.md            # Full documentation, quick start & env vars
 │   ├── docs/                # Client configs, auto-generated tool reference & plugin guide
@@ -107,7 +107,7 @@ mcp-servers/
 └── README.md                # You are here
 ```
 
-<img src="./docs/assets/accent-line.svg" alt="" width="100%" />
+<img src="./public/assets/accent-line.svg" alt="" width="100%" />
 
 ## 📄 License
 
@@ -115,7 +115,7 @@ This repository is distributed under the [MIT License](./LICENSE). © 2026 Anton
 
 Individual sub-components that integrate directly with copyleft software APIs carry their own license inside their respective folder (for example, [`blender/packages/addon/`](./blender/packages/addon/LICENSE) is licensed under `GPL-3.0-or-later` — see [`blender/LICENSING.md`](./blender/LICENSING.md) for details).
 
-<img src="./docs/assets/accent-line.svg" alt="" width="100%" />
+<img src="./public/assets/accent-line.svg" alt="" width="100%" />
 
 <div align="center">
   <sub>Built for reliable, secure, agent-native workflows across desktop and creative software.</sub>
