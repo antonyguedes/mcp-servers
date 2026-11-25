@@ -77,14 +77,18 @@ def get_blender_version(blender_bin: Path) -> tuple[int, int, int] | None:
 
 
 def get_addon_source_dir() -> Path:
-    """Locate `packages/addon` relative to this package."""
+    """Locate the Blender add-on source directory (repo checkout or bundled wheel)."""
     here = Path(__file__).resolve()
-    # packages/server/blender_mcp/bridge/launcher.py -> repo root -> packages/addon
+    # 1. Editable / source checkout: packages/server/blender_mcp/bridge/launcher.py -> packages/addon
     for parent in here.parents:
         candidate = parent / "packages" / "addon"
         if (candidate / "bootstrap.py").is_file():
             return candidate
-    raise FileNotFoundError("Could not locate packages/addon directory containing bootstrap.py")
+    # 2. Installed wheel / `uvx`: blender_mcp/_bundled_addon
+    bundled = here.parent.parent / "_bundled_addon"
+    if (bundled / "bootstrap.py").is_file():
+        return bundled
+    raise FileNotFoundError("Could not locate Blender add-on directory containing bootstrap.py")
 
 
 def _find_free_port(host: str = DEFAULT_HOST) -> int:

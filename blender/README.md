@@ -26,6 +26,18 @@ See [LICENSING.md](LICENSING.md) for details on the hybrid MIT + GPL-3.0-or-late
 
 ## Quick Start
 
+### Option A — Zero-Clone via `uvx` (Recommended for Users)
+
+```bash
+# 1. Install the bridge add-on into Blender (auto-detects 4.2+ Extension or 3.6-4.1 legacy Add-on)
+uvx --from "git+https://github.com/antonyguedes/mcp-servers#subdirectory=blender" blender-mcp install-addon
+
+# 2. Verify your Blender installation and bridge connection
+uvx --from "git+https://github.com/antonyguedes/mcp-servers#subdirectory=blender" blender-mcp doctor
+```
+
+### Option B — From Source Checkout (Development)
+
 ```bash
 # 1. Clone the repository and enter the blender server directory
 git clone https://github.com/antonyguedes/mcp-servers.git
@@ -34,7 +46,7 @@ cd mcp-servers/blender
 # 2. Install workspace dependencies
 uv sync --group dev
 
-# 3. Install the bridge add-on into Blender (auto-detects 4.2+ Extension or 3.6-4.1 legacy Add-on)
+# 3. Install the bridge add-on into Blender
 uv run blender-mcp install-addon
 
 # 4. Verify your Blender installation and bridge connection

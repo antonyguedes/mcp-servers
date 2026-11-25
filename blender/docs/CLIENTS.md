@@ -4,20 +4,23 @@
 
 ## 1. Prepare Blender
 
-### GUI Mode (Blender 3.6 LTS → 5.3+)
+### One-Command Install via `uvx` (No Clone Required)
 ```bash
-uv run blender-mcp install-addon
+uvx --from "git+https://github.com/antonyguedes/mcp-servers#subdirectory=blender" blender-mcp install-addon
 ```
+*(Or from a local clone: `uv run blender-mcp install-addon`.)*
+
+### GUI Mode (Blender 3.6 LTS → 5.3+)
 Open Blender, press `N` in the 3D Viewport → open the **MCP** tab → confirm `Status: Running`.
 
 ### Headless Mode (No GUI / CI / Render Farm)
 ```bash
-uv run blender-mcp launch --port 9876
+uvx --from "git+https://github.com/antonyguedes/mcp-servers#subdirectory=blender" blender-mcp launch --port 9876
 ```
 
 ### Quick Diagnostics
 ```bash
-uv run blender-mcp doctor
+uvx --from "git+https://github.com/antonyguedes/mcp-servers#subdirectory=blender" blender-mcp doctor
 ```
 
 ---
@@ -25,14 +28,20 @@ uv run blender-mcp doctor
 ## 2. Configuration Snippets by Client
 
 > **Tip for clients with tool-count limits (e.g., Cursor's ~40-tool cap):** set `"BLENDER_MCP_PROFILE": "minimal"` (loads fewer than 20 initial tools) and let the agent activate modules on demand via `enable_toolset("nodes")`, `enable_toolset("animation")`, `enable_toolset("integrations")`, etc.
+>
+> All snippets below run directly via `uvx` without cloning the repository. If developing locally, replace `"uvx"` + `["--from", ..., "blender-mcp"]` with `"uv"` + `["--directory", "/PATH/TO/mcp-servers/blender", "run", "blender-mcp"]`.
 
 ### Claude Desktop (`claude_desktop_config.json`)
 ```json
 {
   "mcpServers": {
     "blender": {
-      "command": "uv",
-      "args": ["--directory", "/PATH/TO/mcp-servers/blender", "run", "blender-mcp"],
+      "command": "uvx",
+      "args": [
+        "--from",
+        "git+https://github.com/antonyguedes/mcp-servers#subdirectory=blender",
+        "blender-mcp"
+      ],
       "env": {
         "BLENDER_MCP_ALLOW_PYTHON": "false",
         "BLENDER_MCP_PROFILE": "modeling"
@@ -47,7 +56,7 @@ uv run blender-mcp doctor
 claude mcp add blender \
   -e BLENDER_MCP_ALLOW_PYTHON=false \
   -e BLENDER_MCP_PROFILE=full \
-  -- uv --directory /PATH/TO/mcp-servers/blender run blender-mcp
+  -- uvx --from "git+https://github.com/antonyguedes/mcp-servers#subdirectory=blender" blender-mcp
 ```
 
 ### Cursor (`.cursor/mcp.json`)
@@ -55,8 +64,12 @@ claude mcp add blender \
 {
   "mcpServers": {
     "blender": {
-      "command": "uv",
-      "args": ["--directory", "/PATH/TO/mcp-servers/blender", "run", "blender-mcp"],
+      "command": "uvx",
+      "args": [
+        "--from",
+        "git+https://github.com/antonyguedes/mcp-servers#subdirectory=blender",
+        "blender-mcp"
+      ],
       "env": {
         "BLENDER_MCP_ALLOW_PYTHON": "false",
         "BLENDER_MCP_PROFILE": "minimal"
@@ -72,8 +85,12 @@ claude mcp add blender \
   "servers": {
     "blender": {
       "type": "stdio",
-      "command": "uv",
-      "args": ["--directory", "/PATH/TO/mcp-servers/blender", "run", "blender-mcp"],
+      "command": "uvx",
+      "args": [
+        "--from",
+        "git+https://github.com/antonyguedes/mcp-servers#subdirectory=blender",
+        "blender-mcp"
+      ],
       "env": {
         "BLENDER_MCP_ALLOW_PYTHON": "false",
         "BLENDER_MCP_PROFILE": "modeling"
@@ -88,8 +105,12 @@ claude mcp add blender \
 {
   "mcpServers": {
     "blender": {
-      "command": "uv",
-      "args": ["--directory", "/PATH/TO/mcp-servers/blender", "run", "blender-mcp"],
+      "command": "uvx",
+      "args": [
+        "--from",
+        "git+https://github.com/antonyguedes/mcp-servers#subdirectory=blender",
+        "blender-mcp"
+      ],
       "env": {
         "BLENDER_MCP_ALLOW_PYTHON": "false",
         "BLENDER_MCP_PROFILE": "full"

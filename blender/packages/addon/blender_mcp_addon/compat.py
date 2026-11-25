@@ -404,6 +404,40 @@ def set_mesh_shading(obj: Any, mode: str, angle_degrees: float = 30.0) -> dict[s
     }
 
 
+def _coerce_geonodes_value(socket_type: str, value: Any) -> Any:
+    """Coerce JSON values (object/collection/material names, vectors, colors) for GeoNodes inputs."""
+    st = socket_type or ""
+    if "Object" in st and isinstance(value, str):
+        obj = bpy.data.objects.get(value)
+        if obj is None:
+            raise ValueError(f"Object {value!r} not found for Geometry Nodes input.")
+        return obj
+    if "Collection" in st and isinstance(value, str):
+        col = bpy.data.collections.get(value)
+        if col is None:
+            raise ValueError(f"Collection {value!r} not found for Geometry Nodes input.")
+        return col
+    if "Material" in st and isinstance(value, str):
+        mat = bpy.data.materials.get(value)
+        if mat is None:
+            raise ValueError(f"Material {value!r} not found for Geometry Nodes input.")
+        return mat
+    if "Image" in st and isinstance(value, str):
+        return bpy.data.images.get(value) or bpy.data.images.load(value, check_existing=True)
+    if "Color" in st and isinstance(value, (list, tuple)):
+        vals = [float(v) for v in value]
+        if len(vals) == 3:
+            vals.append(1.0)
+        return tuple(vals[:4])
+    if "Vector" in st and isinstance(value, (list, tuple)):
+        return tuple(float(v) for v in value[:3])
+    if "Int" in st and isinstance(value, (int, float)) and not isinstance(value, bool):
+        return int(value)
+    if "Bool" in st:
+        return bool(value)
+    return value
+
+
 def set_geometry_nodes_input(mod: Any, key: str, value: Any) -> bool:
     """Set a Geometry Nodes modifier input by display name or identifier across Blender 3.6 -> 5.3+."""
     tree = getattr(mod, "node_group", None)
@@ -411,6 +445,7 @@ def set_geometry_nodes_input(mod: Any, key: str, value: Any) -> bool:
         return False
 
     ident: str | None = None
+    socket_type = ""
     if hasattr(tree, "interface"):
         for item in tree.interface.items_tree:
             if (
@@ -419,15 +454,19 @@ def set_geometry_nodes_input(mod: Any, key: str, value: Any) -> bool:
                 and (item.name == key or item.identifier == key)
             ):
                 ident = item.identifier
+                socket_type = str(getattr(item, "socket_type", ""))
                 break
     elif hasattr(tree, "inputs"):
         for item in tree.inputs:
             if item.name == key or item.identifier == key:
                 ident = item.identifier
+                socket_type = str(getattr(item, "bl_socket_idname", ""))
                 break
 
     if ident is None:
         return False
+
+    coerced = _coerce_geonodes_value(socket_type, value)
 
     # Blender 5.3+: GeometryNodesModifierInterface (`mod.properties.inputs.<ident>.value`)
     props = getattr(mod, "properties", None)
@@ -435,11 +474,11 @@ def set_geometry_nodes_input(mod: Any, key: str, value: Any) -> bool:
     if inputs_group is not None and hasattr(inputs_group, ident):
         sock_prop = getattr(inputs_group, ident)
         if hasattr(sock_prop, "value"):
-            sock_prop.value = value
+            sock_prop.value = coerced
             return True
 
     # Blender 3.6 - 5.2: IDProperties on modifier (`mod[ident] = value`)
-    mod[ident] = value
+    mod[ident] = coerced
     return True
 
 

@@ -7,13 +7,6 @@ resolution-markers = [
     "python_full_version < '3.12' or (python_full_version >= '3.12' and python_full_version < '3.14' and sys_platform != 'emscripten')",
 ]
 
-[manifest]
-members = [
-    "blender-mcp",
-    "blender-mcp-protocol",
-    "blender-mcp-workspace",
-]
-
 [[package]]
 name = "annotated-types"
 version = "0.8.0"
@@ -48,38 +41,16 @@ wheels = [
 [[package]]
 name = "blender-mcp"
 version = "1.0.0"
-source = { editable = "packages/server" }
+source = { editable = "." }
 dependencies = [
-    { name = "blender-mcp-protocol" },
     { name = "httpx" },
     { name = "mcp" },
     { name = "pillow" },
     { name = "pydantic" },
 ]
 
-[package.metadata]
-requires-dist = [
-    { name = "blender-mcp-protocol", editable = "packages/protocol" },
-    { name = "httpx", specifier = ">=0.27.0" },
-    { name = "mcp", specifier = ">=2.0.0" },
-    { name = "pillow", specifier = ">=10.0.0" },
-    { name = "pydantic", specifier = ">=2.7.0" },
-]
-
-[[package]]
-name = "blender-mcp-protocol"
-version = "1.0.0"
-source = { editable = "packages/protocol" }
-
-[[package]]
-name = "blender-mcp-workspace"
-version = "1.0.0"
-source = { virtual = "." }
-
 [package.dev-dependencies]
 dev = [
-    { name = "blender-mcp" },
-    { name = "blender-mcp-protocol" },
     { name = "pyright" },
     { name = "pytest" },
     { name = "pytest-asyncio" },
@@ -87,11 +58,15 @@ dev = [
 ]
 
 [package.metadata]
+requires-dist = [
+    { name = "httpx", specifier = ">=0.27.0" },
+    { name = "mcp", specifier = ">=2.0.0" },
+    { name = "pillow", specifier = ">=10.0.0" },
+    { name = "pydantic", specifier = ">=2.7.0" },
+]
 
 [package.metadata.requires-dev]
 dev = [
-    { name = "blender-mcp", editable = "packages/server" },
-    { name = "blender-mcp-protocol", editable = "packages/protocol" },
     { name = "pyright", specifier = ">=1.1.390" },
     { name = "pytest", specifier = ">=8.3.0" },
     { name = "pytest-asyncio", specifier = ">=0.25.0" },

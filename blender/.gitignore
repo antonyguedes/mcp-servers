@@ -16,3 +16,6 @@ build/
 .env.local
 .DS_Store
 docker/workspace/
+
+# Commercial / private Agent Skills (published separately on Agensi)
+skills/
